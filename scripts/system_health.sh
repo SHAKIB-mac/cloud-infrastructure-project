@@ -27,7 +27,7 @@ echo "IP Address: $(hostname -I)"
 
 echo "=========================="
 echo "Status:"
-if [ "$cpu" -lt 10 ] && [ "$memory" -lt 80 ] && [ "$disk" -lt 80 ];  then
+if [ "$cpu" -lt 80 ] && [ "$memory" -lt 80 ] && [ "$disk" -lt 80 ];  then
     echo "HEALTHY"
 else 
     echo "WARNING"
