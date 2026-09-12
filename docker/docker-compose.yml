@@ -1,0 +1,9 @@
+services:
+  cloud-monitoring:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: cloud-monitoring-app
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
