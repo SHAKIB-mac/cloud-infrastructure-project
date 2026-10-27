@@ -1,188 +1,134 @@
 # Cloud Infrastructure Monitoring & Deployment Lab
 
-## Overview
+A hands-on portfolio project that combines Linux system health checks, a small Python monitoring service, Flask, Docker, Docker Compose, and Git/GitHub. Built as a learning project for cloud engineering, networking, and IT infrastructure internships.
 
-This project is a hands-on cloud infrastructure monitoring and deployment lab designed to demonstrate practical skills required for a Junior Cloud Engineer or Cloud/DevOps Internship role.
+## Project at a glance
 
-The project combines Linux system administration, networking, Python monitoring, Flask web services, Docker, Docker Compose, and Git/GitHub into one integrated environment.
+- **Purpose:** Display basic host/container health metrics through a command-line script and an HTTP endpoint.
+- **Monitoring:** CPU, memory, disk, hostname, IP address, and a simple `HEALTHY` / `WARNING` status.
+- **Runtime:** Python + Flask, packaged in a Docker image.
+- **Deployment:** Docker Compose publishes the service on port `8000`.
+- **Environment:** Linux/Ubuntu, Bash, Python, Docker, Git.
+
+> **Scope note:** This is a learning lab, not a production monitoring platform. It does not currently include a cloud-provider deployment, authentication, a dashboard, or automated test suite.
 
 ## Architecture
 
 ```text
-Client
-  |
-  | HTTP :8000
-  v
-Ubuntu Linux Host
-  |
-  v
-Docker Compose
-  |
-  v
-Docker Container
-  |
-  v
-Flask Web Service
-  |
-  v
-Python Monitoring Application
-  |
-  +---- CPU Usage
-  +---- Memory Usage
-  +---- Disk Usage
-  +---- Hostname
-  +---- IP Address
+Browser / curl
+     |
+     | HTTP :8000
+     v
+Docker Compose port mapping
+     |
+     v
+cloud-monitoring-app container
+     |
+     v
+Flask endpoint (web_app.py)
+     |
+     v
+Python monitor module (monitor.py)
+     |
+     +--> CPU usage
+     +--> Memory usage
+     +--> Disk usage
+     +--> Hostname and IP address
+     +--> HEALTHY / WARNING status
 ```
 
-## Technologies
-
-- Linux / Ubuntu
-- Python
-- Flask
-- Docker
-- Docker Compose
-- Git
-- GitHub
-- Linux Networking
-- Bash Scripting
-
-## Project Features
-
-- Linux system health monitoring
-- CPU, memory, and disk monitoring
-- Hostname and IP address detection
-- Automatic HEALTHY/WARNING status detection
-- Python-based monitoring application
-- Flask HTTP monitoring service
-- Docker containerization
-- Docker Compose deployment
-- Container networking
-- Automatic container restart policy
-- Git version control
-- GitHub project hosting
-
-## Project Structure
+## Repository structure
 
 ```text
 cloud-infrastructure-project/
 ├── app/
-│   ├── monitor.py
-│   ├── requirements.txt
-│   └── web_app.py
+│   ├── monitor.py           # Collects metrics and evaluates status
+│   ├── web_app.py           # Flask HTTP endpoint
+│   └── requirements.txt     # Python dependencies
 ├── docker/
-│   ├── Dockerfile
-│   └── docker-compose.yml
+│   ├── Dockerfile           # Builds the Python application image
+│   └── docker-compose.yml   # Runs the container and maps port 8000
 ├── scripts/
-│   └── system_health.sh
+│   └── system_health.sh     # Linux host health report
 ├── .gitignore
 └── README.md
 ```
 
-## Running the Project
+## Requirements
 
-### Start the application
+- Linux or another system with Docker Engine and the Docker Compose plugin
+- Git (to clone the repository)
+- Internet access when building the image for the first time, to download the base image and Python dependencies
+
+## Run the containerized service
+
+Clone the repository and enter its directory:
+
+```bash
+git clone https://github.com/SHAKIB-mac/cloud-infrastructure-project.git
+cd cloud-infrastructure-project
+```
+
+Build and start the service:
 
 ```bash
 docker compose -f docker/docker-compose.yml up -d --build
 ```
 
-### Check the container
+Check that the container is running:
 
 ```bash
 docker ps
+docker compose -f docker/docker-compose.yml logs
 ```
 
-### Test the monitoring service
+Request the HTTP endpoint:
 
 ```bash
 curl http://localhost:8000
 ```
 
-### Stop the application
+Open `http://localhost:8000` in a browser on the same machine to view the response.
+
+Stop the service when finished:
 
 ```bash
 docker compose -f docker/docker-compose.yml down
 ```
 
-## Example Output
+## Run the Bash host health report
 
-```text
-Cloud Infrastructure Monitoring Service
+On a Linux host, run:
 
-Hostname: <container-hostname>
-CPU Usage: <cpu>%
-Memory Usage: <memory>%
-Disk Usage: <disk>%
-IP Address: <container-ip>
-Status: HEALTHY
+```bash
+chmod +x scripts/system_health.sh
+./scripts/system_health.sh
 ```
 
-## Testing
+The script reports the current time, hostname, uptime, CPU usage, memory usage, root filesystem usage, IP address, and a threshold-based status. It requires standard Linux utilities such as `top`, `free`, `df`, and `ip`.
 
-The project has been tested across multiple infrastructure layers, including:
+## What I practiced
 
-- Python monitoring execution
-- Flask HTTP endpoint
-- Docker container startup
-- Docker container restart
-- Docker Compose deployment
-- Container networking
-- Python dependency installation
-- Dockerfile build
-- System health Bash script
-- Git repository synchronization
-- GitHub repository push
+- Writing Bash scripts to collect and summarize system information
+- Collecting basic resource metrics with Python and `psutil`
+- Exposing metrics through a Flask HTTP route
+- Building a Python application image with a Dockerfile
+- Running a container and publishing a port with Docker Compose
+- Checking container status, viewing logs, and testing an endpoint with `curl`
+- Managing project files and documentation with Git/GitHub
 
-## Key Engineering Practices
+## Known limitations and next steps
 
-This project demonstrates practical experience with:
-
-- Linux command-line administration
-- Bash scripting
-- Linux networking
-- System resource monitoring
-- Python application development
-- Flask web services
-- Docker image creation
-- Docker container management
-- Docker Compose orchestration
-- Container networking
-- Service restart policies
-- Git version control
-- GitHub repository management
-- Infrastructure troubleshooting
-
-## Future Improvements
-
-Planned improvements include:
-
-- Automated Python unit tests
-- CI/CD pipeline using GitHub Actions
-- Production WSGI server
-- Centralized application logging
-- Monitoring dashboard
-- Cloud deployment on AWS or Azure
-- Infrastructure as Code using Terraform
-- Kubernetes deployment
-- Automated infrastructure health checks
-
-## Learning Outcomes
-
-Through this project, I practiced integrating multiple cloud engineering fundamentals into a single working environment.
-
-The project strengthened my practical understanding of:
-
-- Linux infrastructure
-- Networking
-- Python
-- Docker
-- Docker Compose
-- Git/GitHub
-- System monitoring
-- Infrastructure troubleshooting
+- Add automated tests for metric collection and status thresholds.
+- Improve the IP-address logic for environments with multiple network interfaces.
+- Add structured logging and clearer HTTP response formatting.
+- Add a health-check endpoint and document how to troubleshoot common startup errors.
+- Explore CI with GitHub Actions.
+- Consider cloud deployment only after the local container workflow is documented and repeatable.
 
 ## Author
 
-**Shakib**
+**Shakib**  
+Information Systems and Security undergraduate | Cloud, Networking & IT Infrastructure internship candidate
 
-Cloud Engineer / Cloud & DevOps Internship Candidate
+GitHub: https://github.com/SHAKIB-mac
