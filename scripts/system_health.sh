@@ -27,18 +27,30 @@ echo  "Memory Usage: ${memory}%"
 disk=$(df -h / | tail -1 | awk '{print  $5}' | tr -d '%')
 echo "Disk Usage: ${disk}%"
 
-ip_address=$(ip -4 route get 1.1.1.1 | awk '{for (i=1; i<=NF; i++) if ($i=="src") {print $(i+1); exit}}')
+ip_address=$(ip -4 route show default | awk '{for (i=1; i<=NF; i++) if ($i=="src") {print $(i+1); exit}}')
 echo "IP Address: ${ip_address}"
 
 echo "=========================="
 echo "Status:"
+
+status=0
+
 if [ "$cpu" -ge 80 ]; then
     echo "WARNING: High CPU usage (${cpu}%)"
-elif [ "$memory" -ge 80 ]; then
+    status=1
+fi
+
+if [ "$memory" -ge 80 ]; then
     echo "WARNING: High memory usage (${memory}%)"
-elif [ "$disk" -ge 80 ]; then
+    status=1
+fi
+
+if [ "$disk" -ge 80 ]; then
     echo "WARNING: High disk usage (${disk}%)"
-else 
+    status=1
+fi
+
+if [ "$status" -eq 0 ]; then
     echo "HEALTHY"
 fi
 echo "========================="
