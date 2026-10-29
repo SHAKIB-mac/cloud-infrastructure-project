@@ -31,6 +31,7 @@ ip_address=$(ip -4 route show default | awk '{for (i=1; i<=NF; i++) if ($i=="src
 echo "IP Address: ${ip_address}"
 
 echo "=========================="
+
 echo "Status:"
 
 status=0
@@ -54,3 +55,5 @@ if [ "$status" -eq 0 ]; then
     echo "HEALTHY"
 fi
 echo "========================="
+
+exit "$status"
